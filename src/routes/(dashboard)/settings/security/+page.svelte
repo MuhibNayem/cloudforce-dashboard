@@ -50,8 +50,8 @@
 	}
 
 	async function generateQRCode() {
-		const secret = 'YOUR_SECRET_KEY';
-		const otpAuthUrl = `otpauth://totp/YourAppName?secret=${secret}&issuer=YourAppName`;
+		const secret = 'JBSWY3DPEHPK3PXP';
+		const otpAuthUrl = `otpauth://totp/cloudforce?secret=${secret}&issuer=cloudforce`;
 
 		qrCodeDataUrl = await QRCode.toDataURL(otpAuthUrl);
 	}
