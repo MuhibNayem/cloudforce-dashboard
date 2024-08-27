@@ -4,8 +4,10 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+	import { useToast } from '$lib/hooks/useToast';
 	import { post } from '$lib/services/axios';
 	import { cn } from '$lib/utils.js';
+	import type { AxiosError } from 'axios';
 	import { beforeUpdate } from 'svelte';
 
 	let isLoading = false;
@@ -17,6 +19,8 @@
 	let confirmPassword = '';
 	let firstName = '';
 	let lastName = '';
+
+	const { showErrorToast } = useToast();
 
 	beforeUpdate(() => {
 		const authenticated = JSON.parse(localStorage.getItem('authenticated') ?? '{}');
@@ -38,6 +42,8 @@
 				goto('/login');
 			}
 		} catch (error) {
+			const axiosError = error as unknown as AxiosError;
+			showErrorToast('failed', axiosError?.response?.statusText);
 			console.error(error);
 		} finally {
 			isLoading = false;

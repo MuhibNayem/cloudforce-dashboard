@@ -18,9 +18,13 @@
 	import { post } from '$lib/services/axios';
 	import { CircleUser } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import type { AxiosError } from 'axios';
+	import { useToast } from '$lib/hooks/useToast';
 
 	let authenticated = false;
 	let selected = 'dashboard';
+
+	const { showErrorToast } = useToast();
 
 	onMount(() => {
 		authenticated = JSON.parse(localStorage.getItem('authenticated') ?? '{}');
@@ -50,7 +54,8 @@
 				goto('/login');
 			}
 		} catch (error) {
-			console.error(error);
+			const axiosError = error as unknown as AxiosError;
+			showErrorToast('failed', axiosError?.response?.statusText);
 		}
 	};
 

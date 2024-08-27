@@ -8,6 +8,8 @@
 	import { cn } from '$lib/utils.js';
 	import { beforeUpdate } from 'svelte';
 	import qs from 'qs';
+	import { useToast } from '$lib/hooks/useToast';
+	import type { AxiosError } from 'axios';
 
 	interface authResponse {
 		access_token?: string;
@@ -21,6 +23,8 @@
 	let email = '';
 	let password = '';
 	let authenticated: boolean;
+
+	const { showErrorToast } = useToast();
 
 	beforeUpdate(() => {
 		authenticated = JSON.parse(localStorage.getItem('authenticated') ?? '{}');
@@ -48,7 +52,8 @@
 				goto('/');
 			}
 		} catch (error) {
-			console.error(error);
+			const axiosError = error as unknown as AxiosError;
+			showErrorToast('failed', axiosError?.response?.statusText);
 		} finally {
 			isLoading = false;
 		}
